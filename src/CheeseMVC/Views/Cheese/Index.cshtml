@@ -17,8 +17,10 @@
         <tr>
             <td>@cheese.Name</td>
             <td>@cheese.Description</td>
+            <td><a asp-controller="Cheese" asp-action="Edit" asp-route-id="@cheese.CheeseId">Edit Cheese</a></td>
         </tr>
     }
 </table>
 
 <p><a asp-controller="Cheese" asp-action="Add">Add Cheese</a></p>
+

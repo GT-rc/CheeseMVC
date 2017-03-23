@@ -11,12 +11,10 @@ namespace CheeseMVC.Controllers
 {
     public class CheeseController : Controller
     {
-        
         // GET: /<controller>/
         public IActionResult Index()
         {
             ViewBag.cheeses = CheeseData.GetAll();
-
             return View();
         }
 
@@ -30,7 +28,6 @@ namespace CheeseMVC.Controllers
         public IActionResult NewCheese(Cheese newCheese)
         {
             CheeseData.Add(newCheese);
-            
             return Redirect("/Cheese");
         }
 
@@ -48,6 +45,21 @@ namespace CheeseMVC.Controllers
             {
                 CheeseData.Remove(cheeseId);
             }
+            return Redirect("/");
+        }
+
+        public IActionResult Edit(int id)
+        {
+            ViewBag.cheeses = CheeseData.GetById(id);
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Edit(int id, string name, string description)
+        {
+            var updatedCheese = CheeseData.GetById(id);
+            updatedCheese.Name = name;
+            updatedCheese.Description = description;
             return Redirect("/");
         }
     }
