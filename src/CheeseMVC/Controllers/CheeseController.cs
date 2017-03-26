@@ -39,27 +39,28 @@ namespace CheeseMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Remove(int[] cheeseIds)
+        public IActionResult Remove(string[] cheeseIds)
         {
-            foreach (int cheeseId in cheeseIds)
+            foreach (string cheeseId in cheeseIds)
             {
                 CheeseData.Remove(cheeseId);
             }
             return Redirect("/");
         }
 
-        public IActionResult Edit(int id)
+        [HttpGet]
+        [Route("/Cheese/Edit/{cheeseId}")]
+        public IActionResult Edit(string cheeseId)
         {
-            ViewBag.cheeses = CheeseData.GetById(id);
+            ViewBag.cheeses = CheeseData.GetById(cheeseId);
             return View();
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, string name, string description)
+        [Route("/Cheese/Edit/{cheeseId}")]
+        public IActionResult Edit(Cheese cheese)
         {
-            var updatedCheese = CheeseData.GetById(id);
-            updatedCheese.Name = name;
-            updatedCheese.Description = description;
+            CheeseData.Save(cheese);
             return Redirect("/");
         }
     }

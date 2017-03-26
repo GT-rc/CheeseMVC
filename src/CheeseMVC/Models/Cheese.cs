@@ -9,18 +9,32 @@ namespace CheeseMVC.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public int CheeseId { get; set; }
-        private static int nextId = 1;
+        public string CheeseId { get; set; }
+        //private static int nextId = 1;
 
+            /*
         public Cheese(string name, string description)
         {
             Name = name;
             Description = description;
+        } */
+
+        public Cheese()
+        {
+            // Remove the hyphens because routing does not allow them by default
+            CheeseId = Guid.NewGuid().ToString().Replace("-", string.Empty);    
         }
 
-        public Cheese() {
-            CheeseId = nextId;
-            nextId++;
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Cheese passedCheese = (Cheese)obj;
+
+            return CheeseId.Equals(passedCheese.CheeseId);
         }
     }
 }
