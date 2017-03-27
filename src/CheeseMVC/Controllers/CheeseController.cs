@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CheeseMVC.Models;
+using CheeseMVC.ViewModels;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,21 +15,34 @@ namespace CheeseMVC.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            ViewBag.cheeses = CheeseData.GetAll();
-            return View();
+            List<Cheese> cheeses = CheeseData.GetAll();
+            return View(cheeses);
         }
 
         public IActionResult Add()
         {
-            return View();
+            AddCheeseViewModel addCheeseViewModel = new AddCheeseViewModel();
+            return View(addCheeseViewModel);
         }
 
         [HttpPost]
-        [Route("/Cheese/Add")]
-        public IActionResult NewCheese(Cheese newCheese)
+        public IActionResult Add(AddCheeseViewModel addCheeseViewModel)
         {
-            CheeseData.Add(newCheese);
-            return Redirect("/Cheese");
+            if (ModelState.IsValid)
+            {
+                Cheese newCheese = new Models.Cheese
+                {
+                    Name = addCheeseViewModel.Name,
+                    Description = addCheeseViewModel.Description,
+                    Type = addCheeseViewModel.Type
+                };
+
+                CheeseData.Add(newCheese);
+
+                return Redirect("/Cheese");
+            }
+
+            return View(addCheeseViewModel);
         }
 
         public IActionResult Remove()
@@ -52,15 +66,18 @@ namespace CheeseMVC.Controllers
         [Route("/Cheese/Edit/{cheeseId}")]
         public IActionResult Edit(string cheeseId)
         {
-            ViewBag.cheeses = CheeseData.GetById(cheeseId);
-            return View();
+            AddEditCheeseViewModel addEditCheeseViewModel = new AddEditCheeseViewModel();
+            return View(addEditCheeseViewModel);
         }
 
         [HttpPost]
         [Route("/Cheese/Edit/{cheeseId}")]
-        public IActionResult Edit(Cheese cheese)
+        public IActionResult Edit(AddEditCheeseViewModel addEditCheeseViewModel)
         {
-            CheeseData.Save(cheese);
+            // How do you pull the object from the ViewModel?
+            Cheese editedCheese = Cheese.Find(addEditCheeseViewModel.CheeseId);
+            CheeseData.Save(editedCheese);
+            
             return Redirect("/");
         }
     }
